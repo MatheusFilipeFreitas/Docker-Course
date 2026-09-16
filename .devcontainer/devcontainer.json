@@ -1,0 +1,36 @@
+{
+  "name": "first-app (Spring Boot + Maven)",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "docker-compose.extend.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8080, 35729, 5005],
+  "portsAttributes": {
+    "8080": { "label": "application", "onAutoForward": "notify" },
+    "35729": { "label": "devtools livereload" },
+    "5005": { "label": "jvm debug" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-xml"
+      ],
+      "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "automatic",
+        "java.autobuild.enabled": true,
+        "java.jdt.ls.java.home": "/opt/java/openjdk",
+        "maven.executable.path": "/usr/share/maven/bin/mvn",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "postCreateCommand": "mvn -B -q dependency:go-offline",
+  "remoteUser": "root"
+}

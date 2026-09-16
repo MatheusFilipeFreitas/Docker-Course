@@ -1,0 +1,17 @@
+FROM maven:3.9.16-eclipse-temurin-25
+
+WORKDIR /app
+
+# Dependency layer: only re-downloads when pom.xml changes.
+COPY pom.xml /app/
+RUN mvn -B dependency:go-offline
+
+# Baseline sources; at runtime they are shadowed by the bind mount from the host.
+COPY src /app/src
+COPY docker/dev-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
+RUN chmod +x /usr/local/bin/dev-entrypoint.sh
+
+# 8080 = app | 35729 = devtools livereload | 5005 = remote debug (JDWP)
+EXPOSE 8080 35729 5005
+
+CMD ["/usr/local/bin/dev-entrypoint.sh"]

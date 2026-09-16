@@ -1,0 +1,8 @@
+# Overrides applied only when the project is opened as a VS Code Dev Container.
+# VS Code keeps the container alive itself and the Java extension compiles on
+# save, so the auto-run entrypoint is replaced by an idle command.
+services:
+  app:
+    command: sleep infinity
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
