@@ -1,13 +1,15 @@
-# 08 - Docker Compose
+# 06 - Docker Compose
+
+🌐 [English](../en/06-docker-compose.md) · **Português (Brasil)**
 
 Aplicação com **dois containers** que conversam entre si: uma API Spring Boot e um banco Postgres.
 O Docker Compose descreve os dois num único arquivo e sobe tudo com um comando.
 
 **Arquivos referenciados**
 
-- [`07 - compose-app/docker-compose.yml`](07%20-%20compose-app/docker-compose.yml)
-- [`07 - compose-app/.env.example`](07%20-%20compose-app/.env.example)
-- [`07 - compose-app/Dockerfile`](07%20-%20compose-app/Dockerfile)
+- [`examples/compose-app/docker-compose.yml`](../../examples/compose-app/docker-compose.yml)
+- [`examples/compose-app/.env.example`](../../examples/compose-app/.env.example)
+- [`examples/compose-app/Dockerfile`](../../examples/compose-app/Dockerfile)
 
 ## A aplicação
 
@@ -31,7 +33,7 @@ Uma API mínima de notas, salvas no Postgres:
 
 ## Dockerfile
 
-É o mesmo Dockerfile de produção explicado na [aula 04](04%20-%20Dockerfile.md): multi-stage, cache de
+É o mesmo Dockerfile de produção explicado na [aula 03](03-dockerfile.md): multi-stage, cache de
 dependências e usuário sem privilégios. O Compose só o **usa** para construir a imagem do serviço `app`.
 
 ---
@@ -291,7 +293,7 @@ A ordem de prioridade é: variável exportada no terminal → `.env` → valor p
 
 ## Comandos no terminal
 
-Todos rodam dentro da pasta `07 - compose-app`.
+Todos rodam dentro da pasta `examples/compose-app`.
 
 ### Subindo o ambiente
 

@@ -1,6 +1,8 @@
 # Dev Container
 
-Abra a pasta no VS Code e rode **Dev Containers: Reopen in Container**
+🌐 [English](README.md) · **Português (Brasil)**
+
+Abra a pasta `examples/first-app` no VS Code e rode **Dev Containers: Reopen in Container**
 (requer a extensão *Dev Containers*).
 
 Dentro do container:
@@ -13,4 +15,4 @@ Dentro do container:
 Rodar `docker compose up` (sem o VS Code) usa a mesma imagem, mas o entrypoint
 do container vigia o `src/` e roda `mvn compile` por conta própria.
 
-Explicação completa na aula [06 - VS Code on Docker](../../06%20-%20VS%20Code%20on%20Docker.md).
+Explicação completa na aula [05 - VS Code com Dev Containers](../../../docs/pt-br/05-vscode-dev-containers.md).

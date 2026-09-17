@@ -1,11 +1,13 @@
-# 02 - Commands
+# 02 - Comandos
+
+🌐 [English](../en/02-commands.md) · **Português (Brasil)**
 
 Referência dos comandos da CLI do Docker, sem Dockerfile nem Compose. Os comandos de cada arquivo
 ficam na aula correspondente:
 
-- `docker build` e `docker run` da imagem de produção: [04 - Dockerfile](04%20-%20Dockerfile.md)
-- ambiente de desenvolvimento com Compose: [05 - Dockerfile.dev](05%20-%20Dockerfile.dev.md)
-- referência completa do `docker compose`: [08 - Docker Compose](08%20-%20Docker%20Compose.md)
+- `docker build` e `docker run` da imagem de produção: [03 - Dockerfile](03-dockerfile.md)
+- ambiente de desenvolvimento com Compose: [04 - Dockerfile.dev](04-dockerfile-dev.md)
+- referência completa do `docker compose`: [06 - Docker Compose](06-docker-compose.md)
 
 ## Containers
 
@@ -94,7 +96,9 @@ Gera uma imagem a partir de um Dockerfile
 ```bash
 docker build -t <image-name>:<tag-version> .
 ```
-eg:
+
+Exemplo
+
 ```bash
 docker build -t first-app:1.0 .
 ```

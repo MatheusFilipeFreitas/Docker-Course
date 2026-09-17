@@ -1,4 +1,6 @@
-# 09 - Migração para Docker e Kubernetes
+# 07 - Migração para Docker e Kubernetes
+
+🌐 [English](../en/07-migrating-to-docker-and-kubernetes.md) · **Português (Brasil)**
 
 Roteiro para tirar uma aplicação de um **servidor tradicional** (sem Docker: Java, Node ou nginx instalados
 direto no sistema) e levá-la para um **servidor com Docker** ou para um **cluster Kubernetes**.
@@ -7,16 +9,16 @@ A ideia central: o `Dockerfile` e o `docker-compose.yml` viram a **documentaçã
 aplicação roda. Depois que um projeto tem esses arquivos, trocar de servidor é copiar dois arquivos e rodar
 um comando, e o mesmo roteiro serve para todos os projetos.
 
-O exemplo usado do começo ao fim é a API da [aula 08](08%20-%20Docker%20Compose.md), mas cada fase traz
+O exemplo usado do começo ao fim é a API da [aula 06](06-docker-compose.md), mas cada fase traz
 modelos para outras stacks.
 
 **Arquivos referenciados**
 
-- [`07 - compose-app/Dockerfile`](07%20-%20compose-app/Dockerfile)
-- [`07 - compose-app/docker-compose.yml`](07%20-%20compose-app/docker-compose.yml) (ambiente local)
-- [`07 - compose-app/deploy/docker-compose.prod.yml`](07%20-%20compose-app/deploy/docker-compose.prod.yml)
-- [`07 - compose-app/deploy/.env.prod.example`](07%20-%20compose-app/deploy/.env.prod.example)
-- [`07 - compose-app/deploy/k8s/`](07%20-%20compose-app/deploy/k8s/) (manifests do Kubernetes)
+- [`examples/compose-app/Dockerfile`](../../examples/compose-app/Dockerfile)
+- [`examples/compose-app/docker-compose.yml`](../../examples/compose-app/docker-compose.yml) (ambiente local)
+- [`examples/compose-app/deploy/docker-compose.prod.yml`](../../examples/compose-app/deploy/docker-compose.prod.yml)
+- [`examples/compose-app/deploy/.env.prod.example`](../../examples/compose-app/deploy/.env.prod.example)
+- [`examples/compose-app/deploy/k8s/`](../../examples/compose-app/deploy/k8s/) (manifests do Kubernetes)
 
 ## Visão geral
 
@@ -244,7 +246,7 @@ management.endpoints.web.exposure.include=health
 ### Com código-fonte (o caso ideal)
 
 O Dockerfile compila o projeto, e o servidor não precisa de Maven, JDK nem Node. É o modelo da
-[aula 04](04%20-%20Dockerfile.md), usado em `07 - compose-app/Dockerfile`:
+[aula 03](03-dockerfile.md), usado em `examples/compose-app/Dockerfile`:
 
 ```dockerfile
 FROM maven:3.9.16-eclipse-temurin-25 AS build
@@ -352,7 +354,7 @@ JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=75
 ### .dockerignore
 
 Evita mandar `target/`, `node_modules/`, `.git/` e principalmente `.env` para dentro da imagem (veja a
-[aula 04](04%20-%20Dockerfile.md#dockerignore))
+[aula 03](03-dockerfile.md#dockerignore))
 
 ```
 target/
@@ -376,10 +378,10 @@ docker run --rm -p 8080:8080 -e SPRING_DATASOURCE_URL=... notes:teste
 Antes de tocar em qualquer servidor, recrie o ambiente inteiro na sua máquina: aplicação, banco e demais
 dependências do inventário. Se funcionar aqui, funciona no destino.
 
-É o `docker-compose.yml` explicado na [aula 08](08%20-%20Docker%20Compose.md):
+É o `docker-compose.yml` explicado na [aula 06](06-docker-compose.md):
 
 ```bash
-cd "07 - compose-app"
+cd "examples/compose-app"
 docker compose up -d --build --wait
 curl localhost:8080/notes
 ```
@@ -395,7 +397,7 @@ uma cópia do banco de produção.
 ## Fase 6 — Versionar e publicar a imagem
 
 O servidor de destino não compila nada: ele **baixa** a imagem de um registry. Os comandos abaixo são o
-processo manual; a [aula 10](10%20-%20CI%20e%20CD%20com%20GitHub%20Actions.md) faz o mesmo pelo GitHub Actions,
+processo manual; a [aula 08](08-ci-cd-github-actions.md) faz o mesmo pelo GitHub Actions,
 publicando no GitHub Container Registry.
 
 Autentica no registry (Docker Hub; para GitHub use `docker login ghcr.io`)
@@ -606,7 +608,7 @@ docker compose ps
 ```
 
 Nova versão: altere o `APP_VERSION` no `.env` e rode de novo. Só o container do `app` é recriado. A
-[aula 10](10%20-%20CI%20e%20CD%20com%20GitHub%20Actions.md) automatiza isso a cada commit com o `deploy.sh`
+[aula 08](08-ci-cd-github-actions.md) automatiza isso a cada commit com o `deploy.sh`
 
 ```bash
 docker compose pull app
@@ -703,7 +705,7 @@ images:
 ```
 
 O `secret.example.yaml` **não** está na lista de propósito: assim um `kubectl apply -k` (feito à mão ou pelo
-pipeline da [aula 10](10%20-%20CI%20e%20CD%20com%20GitHub%20Actions.md)) nunca sobrescreve a senha real do cluster.
+pipeline da [aula 08](08-ci-cd-github-actions.md)) nunca sobrescreve a senha real do cluster.
 
 ### namespace.yaml
 
@@ -1115,7 +1117,7 @@ curl localhost:8080/notes
 ```
 
 Nova versão: altere o `newTag` no `kustomization.yaml` e aplique. O Kubernetes substitui os pods um a um.
-A [aula 10](10%20-%20CI%20e%20CD%20com%20GitHub%20Actions.md) automatiza isso a cada commit
+A [aula 08](08-ci-cd-github-actions.md) automatiza isso a cada commit
 
 ```bash
 kubectl apply -k deploy/k8s
@@ -1232,7 +1234,7 @@ Copie para cada projeto a ser migrado:
 - [ ] Imagem publicada no registry com versão (não latest)
 - [ ] Destino Docker: docker-compose.prod.yml + .env no servidor, proxy reverso configurado
 - [ ] Destino Kubernetes: manifests aplicados, Secret criado fora do Git, probes funcionando
-- [ ] Pipeline de CI/CD configurado (aula 10)
+- [ ] Pipeline de CI/CD configurado (aula 08)
 - [ ] Backup do banco no novo ambiente configurado
 - [ ] Virada feita, testes de fumaça ok
 - [ ] Servidor antigo desligado após o período de segurança
