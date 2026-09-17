@@ -1,12 +1,14 @@
-# 04 - Dockerfile
+# 03 - Dockerfile
+
+🌐 [English](../en/03-dockerfile.md) · **Português (Brasil)**
 
 Imagem de **produção** da aplicação de exemplo: compila o projeto e gera uma imagem pequena, contendo
 só a JRE e o `.jar`.
 
 **Arquivos referenciados**
 
-- [`03 - first-app/Dockerfile`](03%20-%20first-app/Dockerfile)
-- [`03 - first-app/.dockerignore`](03%20-%20first-app/.dockerignore)
+- [`examples/first-app/Dockerfile`](../../examples/first-app/Dockerfile)
+- [`examples/first-app/.dockerignore`](../../examples/first-app/.dockerignore)
 
 ## Arquivo completo
 
@@ -168,7 +170,7 @@ locais (como um `target/` antigo) acabem dentro da imagem por um `COPY`.
 
 ## Comandos no terminal
 
-Todos rodam dentro da pasta `03 - first-app`.
+Todos rodam dentro da pasta `examples/first-app`.
 
 Gera a imagem a partir do Dockerfile do diretório atual
 

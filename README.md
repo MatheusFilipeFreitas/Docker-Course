@@ -1,29 +1,52 @@
-# Curso de Docker
+# Docker Course
 
-Anotações e exemplos práticos de Docker, do primeiro `docker run` até um ambiente de desenvolvimento
-completo dentro de containers.
+🌐 **English** · [Português (Brasil)](README.pt-BR.md)
 
-## Pré-requisitos
+Notes and hands-on examples to learn Docker: from the first `docker run` to production deploys on Docker
+servers and Kubernetes, automated with GitHub Actions.
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou outro runtime compatível, como OrbStack)
-- [VS Code](https://code.visualstudio.com/) com a extensão **Dev Containers**, apenas para a aula 06
+Every lesson is available in **English** (`docs/en/`) and **Brazilian Portuguese** (`docs/pt-br/`), with the
+same file names, and each page links to its translation at the top.
 
-Java e Maven **não** precisam estar instalados: o exemplo compila e roda dentro dos containers.
+## Prerequisites
 
-## Aulas
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or another compatible runtime, such as OrbStack)
+- [VS Code](https://code.visualstudio.com/) with the **Dev Containers** extension, only for lesson 05
 
-Os projetos (`03`, `07`) contêm os arquivos Docker. Cada aula mostra o arquivo completo, explica cada
-instrução na ordem em que aparece e termina com os comandos para testar no terminal.
+Java and Maven do **not** need to be installed: the examples build and run inside containers.
 
-| # | Aula | Conteúdo |
-| --- | --- | --- |
-| 01 | [Links](01%20-%20Links.md) | referências |
-| 02 | [Commands](02%20-%20Commands.md) | referência da CLI: containers, imagens, registry, volumes e limpeza |
-| 03 | [first-app](03%20-%20first-app/) | aplicação de exemplo usada nas aulas seguintes |
-| 04 | [Dockerfile](04%20-%20Dockerfile.md) | imagem de produção: multi-stage, cache de camadas, `USER`, `.dockerignore` |
-| 05 | [Dockerfile.dev](05%20-%20Dockerfile.dev.md) | ambiente de desenvolvimento com Compose, bind mount e hot reload |
-| 06 | [VS Code on Docker](06%20-%20VS%20Code%20on%20Docker.md) | Dev Containers: o editor trabalhando dentro do container |
-| 07 | [compose-app](07%20-%20compose-app/) | aplicação de exemplo com API + Postgres, usada na aula 08 |
-| 08 | [Docker Compose](08%20-%20Docker%20Compose.md) | vários serviços: rede interna, volumes, healthcheck, `depends_on`, `.env` e referência de comandos |
-| 09 | [Migração para Docker e Kubernetes](09%20-%20Migra%C3%A7%C3%A3o%20para%20Docker%20e%20Kubernetes.md) | roteiro para levar apps de um servidor sem Docker para Docker ou Kubernetes |
-| 10 | [CI e CD com GitHub Actions](10%20-%20CI%20e%20CD%20com%20GitHub%20Actions.md) | build a cada commit, imagem no GHCR com o hash do commit e deploy automático |
+## Repository layout
+
+```
+.
+├── README.md / README.pt-BR.md
+├── docs/
+│   ├── en/        lessons in English
+│   └── pt-br/     lessons in Brazilian Portuguese (same file names)
+└── examples/
+    ├── first-app/     single Spring Boot app (lessons 03–05)
+    └── compose-app/   Spring Boot API + Postgres (lessons 06–08)
+```
+
+Each lesson shows the full file it covers, explains every instruction in order and ends with the terminal
+commands to try it out.
+
+## Lessons
+
+| # | Lesson | Português | Topics |
+| --- | --- | --- | --- |
+| 01 | [Links](docs/en/01-links.md) | [Links](docs/pt-br/01-links.md) | references |
+| 02 | [Commands](docs/en/02-commands.md) | [Comandos](docs/pt-br/02-commands.md) | CLI reference: containers, images, registry, volumes, cleanup |
+| 03 | [Dockerfile](docs/en/03-dockerfile.md) | [Dockerfile](docs/pt-br/03-dockerfile.md) | production image: multi-stage, layer cache, `USER`, `.dockerignore` |
+| 04 | [Dockerfile.dev](docs/en/04-dockerfile-dev.md) | [Dockerfile.dev](docs/pt-br/04-dockerfile-dev.md) | development environment with Compose, bind mount and hot reload |
+| 05 | [VS Code Dev Containers](docs/en/05-vscode-dev-containers.md) | [VS Code com Dev Containers](docs/pt-br/05-vscode-dev-containers.md) | the editor working inside the container |
+| 06 | [Docker Compose](docs/en/06-docker-compose.md) | [Docker Compose](docs/pt-br/06-docker-compose.md) | multiple services: network, volumes, healthcheck, `depends_on`, `.env` |
+| 07 | [Migrating to Docker and Kubernetes](docs/en/07-migrating-to-docker-and-kubernetes.md) | [Migração para Docker e Kubernetes](docs/pt-br/07-migrating-to-docker-and-kubernetes.md) | moving apps from plain servers to Docker or Kubernetes |
+| 08 | [CI/CD with GitHub Actions](docs/en/08-ci-cd-github-actions.md) | [CI e CD com GitHub Actions](docs/pt-br/08-ci-cd-github-actions.md) | image per commit on GHCR and automatic deploys |
+
+## Examples
+
+| Example | Used in |
+| --- | --- |
+| [`examples/first-app`](examples/first-app/) | lessons 03, 04 and 05 |
+| [`examples/compose-app`](examples/compose-app/) | lessons 06, 07 and 08 |

@@ -1,4 +1,6 @@
-# 06 - VS Code on Docker
+# 05 - VS Code com Dev Containers
+
+🌐 [English](../en/05-vscode-dev-containers.md) · **Português (Brasil)**
 
 Desenvolvimento **dentro do container** pelo VS Code: o editor roda no macOS, mas o Java, o Maven, o
 terminal e o debugger rodam no container. Não é preciso ter Java nem Maven instalados na máquina.
@@ -7,10 +9,10 @@ Requer a extensão **Dev Containers** (`ms-vscode-remote.remote-containers`) ins
 
 **Arquivos referenciados**
 
-- [`03 - first-app/.devcontainer/devcontainer.json`](03%20-%20first-app/.devcontainer/devcontainer.json)
-- [`03 - first-app/.devcontainer/docker-compose.extend.yml`](03%20-%20first-app/.devcontainer/docker-compose.extend.yml)
-- [`03 - first-app/.vscode/launch.json`](03%20-%20first-app/.vscode/launch.json)
-- reaproveita o `Dockerfile.dev` e o `docker-compose.yml` da [aula 05](05%20-%20Dockerfile.dev.md)
+- [`examples/first-app/.devcontainer/devcontainer.json`](../../examples/first-app/.devcontainer/devcontainer.json)
+- [`examples/first-app/.devcontainer/docker-compose.extend.yml`](../../examples/first-app/.devcontainer/docker-compose.extend.yml)
+- [`examples/first-app/.vscode/launch.json`](../../examples/first-app/.vscode/launch.json)
+- reaproveita o `Dockerfile.dev` e o `docker-compose.yml` da [aula 04](04-dockerfile-dev.md)
 
 ## Como funciona
 
@@ -209,7 +211,7 @@ A porta 5005 é a aberta pelo `-agentlib:jdwp` no `dev-entrypoint.sh` e publicad
 
 ## Hot reload nos dois modos
 
-| | `docker compose up` (aula 05) | Dev Container |
+| | `docker compose up` (aula 04) | Dev Container |
 | --- | --- | --- |
 | Detecta a mudança | `dev-entrypoint.sh`, a cada 2s | Language Server do Java, ao salvar |
 | Compila | `mvn compile` | compilador incremental do Eclipse JDT |
@@ -218,7 +220,7 @@ A porta 5005 é a aberta pelo `-agentlib:jdwp` no `dev-entrypoint.sh` e publicad
 
 ## Fluxo de uso
 
-Abrir a pasta `03 - first-app` no VS Code e rodar, na paleta de comandos (`Cmd+Shift+P`)
+Abrir a pasta `examples/first-app` no VS Code e rodar, na paleta de comandos (`Cmd+Shift+P`)
 
 ```
 Dev Containers: Reopen in Container
@@ -247,7 +249,7 @@ Dev Containers: Reopen Folder Locally
 
 ## Comandos no terminal
 
-Rodam no terminal do Mac, dentro da pasta `03 - first-app`.
+Rodam no terminal do Mac, dentro da pasta `examples/first-app`.
 
 Verifica os containers criados pelo Dev Container (mesmo projeto do Compose)
 

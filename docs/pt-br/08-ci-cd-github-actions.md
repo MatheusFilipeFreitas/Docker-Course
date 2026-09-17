@@ -1,14 +1,16 @@
-# 10 - CI e CD com GitHub Actions
+# 08 - CI e CD com GitHub Actions
 
-Automatiza o que a [aula 09](09%20-%20Migra%C3%A7%C3%A3o%20para%20Docker%20e%20Kubernetes.md) fazia à mão: cada commit
+🌐 [English](../en/08-ci-cd-github-actions.md) · **Português (Brasil)**
+
+Automatiza o que a [aula 07](07-migrating-to-docker-and-kubernetes.md) fazia à mão: cada commit
 na `main` vira uma imagem no **GitHub Container Registry (GHCR)**, identificada pelo **hash do commit**, e o
 servidor (Docker ou Kubernetes) baixa e passa a rodar essa versão automaticamente.
 
 **Arquivos referenciados**
 
-- [`07 - compose-app/.github/workflows/ci.yml`](07%20-%20compose-app/.github/workflows/ci.yml)
-- [`07 - compose-app/.github/workflows/cd.yml`](07%20-%20compose-app/.github/workflows/cd.yml)
-- [`07 - compose-app/deploy/deploy.sh`](07%20-%20compose-app/deploy/deploy.sh)
+- [`examples/compose-app/.github/workflows/ci.yml`](../../examples/compose-app/.github/workflows/ci.yml)
+- [`examples/compose-app/.github/workflows/cd.yml`](../../examples/compose-app/.github/workflows/cd.yml)
+- [`examples/compose-app/deploy/deploy.sh`](../../examples/compose-app/deploy/deploy.sh)
 - reaproveita o `Dockerfile`, o `deploy/docker-compose.prod.yml` e o `deploy/k8s/` das aulas anteriores
 
 ## Visão geral
@@ -73,7 +75,7 @@ compose-app/                 ← raiz do repositório
 └── src/
 ```
 
-Neste repositório do curso, a pasta está dentro de `07 - compose-app/` apenas como material de estudo, então
+Neste repositório do curso, a pasta está dentro de `examples/compose-app/` apenas como material de estudo, então
 os workflows **não rodam**. Para usá-los num monorepo (vários projetos no mesmo repositório), veja
 [Vários projetos no mesmo repositório](#vários-projetos-no-mesmo-repositório).
 
@@ -158,7 +160,7 @@ projeto também rodam aqui: se falharem, o PR fica vermelho
 ```
 
 Guarda as camadas no cache do GitHub Actions (`gha`). O download das dependências do Maven só se repete quando o
-`pom.xml` muda, a mesma lógica de cache da [aula 04](04%20-%20Dockerfile.md#cache-de-camadas)
+`pom.xml` muda, a mesma lógica de cache da [aula 03](03-dockerfile.md#cache-de-camadas)
 
 ```yaml
 cache-from: type=gha
@@ -704,7 +706,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "07 - compose-app/**"
+      - "examples/compose-app/**"
 ```
 
 Todos os comandos `run` passam a rodar dentro da pasta do projeto
@@ -712,7 +714,7 @@ Todos os comandos `run` passam a rodar dentro da pasta do projeto
 ```yaml
 defaults:
   run:
-    working-directory: "07 - compose-app"
+    working-directory: examples/compose-app
 ```
 
 O contexto do build aponta para a pasta (as actions `uses:` não seguem o `working-directory`)
@@ -720,7 +722,7 @@ O contexto do build aponta para a pasta (as actions `uses:` não seguem o `worki
 ```yaml
 - uses: docker/build-push-action@v6
   with:
-    context: "07 - compose-app"
+    context: examples/compose-app
 ```
 
 Com vários projetos, cada um ganha seu próprio arquivo (`cd-compose-app.yml`, `cd-outro-projeto.yml`), com o

@@ -1,16 +1,18 @@
-# 05 - Dockerfile.dev
+# 04 - Dockerfile.dev
+
+🌐 [English](../en/04-dockerfile-dev.md) · **Português (Brasil)**
 
 Ambiente de **desenvolvimento** com hot reload: o código da máquina é montado dentro do container e a
 aplicação reinicia sozinha a cada alteração, sem `docker build`.
 
 Esta aula usa o Docker Compose com um único serviço. O Compose é aprofundado, com mais de um serviço,
-na aula [08 - Docker Compose](08%20-%20Docker%20Compose.md).
+na aula [06 - Docker Compose](06-docker-compose.md).
 
 **Arquivos referenciados**
 
-- [`03 - first-app/Dockerfile.dev`](03%20-%20first-app/Dockerfile.dev)
-- [`03 - first-app/docker-compose.yml`](03%20-%20first-app/docker-compose.yml)
-- [`03 - first-app/docker/dev-entrypoint.sh`](03%20-%20first-app/docker/dev-entrypoint.sh)
+- [`examples/first-app/Dockerfile.dev`](../../examples/first-app/Dockerfile.dev)
+- [`examples/first-app/docker-compose.yml`](../../examples/first-app/docker-compose.yml)
+- [`examples/first-app/docker/dev-entrypoint.sh`](../../examples/first-app/docker/dev-entrypoint.sh)
 
 ---
 
@@ -48,7 +50,7 @@ FROM maven:3.9.16-eclipse-temurin-25
 ```
 
 Copia apenas o `pom.xml` e baixa as dependências. Essa camada só é refeita quando o `pom.xml` muda
-(mesma técnica de cache da [aula 04](04%20-%20Dockerfile.md#cache-de-camadas))
+(mesma técnica de cache da [aula 03](03-dockerfile.md#cache-de-camadas))
 
 ```dockerfile
 COPY pom.xml /app/
@@ -77,7 +79,7 @@ EXPOSE 8080 35729 5005
 | 5005 | debugger remoto (JDWP) |
 
 Em vez de `java -jar`, o container roda o script que vigia o código e recompila. Usa `CMD` (e não
-`ENTRYPOINT`) para que a [aula 06](06%20-%20VS%20Code%20on%20Docker.md) possa trocar o comando por
+`ENTRYPOINT`) para que a [aula 05](05-vscode-dev-containers.md) possa trocar o comando por
 `sleep infinity`
 
 ```dockerfile
@@ -235,7 +237,7 @@ O fluxo completo: editar um arquivo no Mac → o arquivo muda dentro do containe
 
 ## Comandos no terminal
 
-Todos rodam dentro da pasta `03 - first-app`.
+Todos rodam dentro da pasta `examples/first-app`.
 
 Constrói a imagem e sobe o ambiente, deixando os logs na tela. Teste em <http://localhost:8080/hello>,
 altere o texto no `HelloController.java` e recarregue a página
