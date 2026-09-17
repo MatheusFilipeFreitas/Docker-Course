@@ -1,8 +1,24 @@
+# 02 - Commands
+
+Referência dos comandos da CLI do Docker, sem Dockerfile nem Compose. Os comandos de cada arquivo
+ficam na aula correspondente:
+
+- `docker build` e `docker run` da imagem de produção: [04 - Dockerfile](04%20-%20Dockerfile.md)
+- ambiente de desenvolvimento com Compose: [05 - Dockerfile.dev](05%20-%20Dockerfile.dev.md)
+- referência completa do `docker compose`: [08 - Docker Compose](08%20-%20Docker%20Compose.md)
+
+## Containers
 
 Lista os containers rodando na máquina
 
 ```bash
 docker ps
+```
+
+Lista todos os containers, inclusive os parados
+
+```bash
+docker ps -a
 ```
 
 Baixa e roda uma imagem de teste do docker
@@ -11,25 +27,31 @@ Baixa e roda uma imagem de teste do docker
 docker run hello-world
 ```
 
-Lista os processos que rodaram na máquina
-
-```bash
-docker ps -a
-```
-
-Baixa e roda uma imagem do ubuntu (sem processo para manter o ubuntu vivo)
+Baixa e roda uma imagem do ubuntu (sem processo para manter o ubuntu vivo, o container encerra na hora)
 
 ```bash
 docker run ubuntu
 ```
 
-Baixa e roda uma imagem do ubuntu iniciando o processo do bash
+Baixa e roda uma imagem do ubuntu iniciando o processo do bash, de forma interativa
 
 ```bash
 docker run -it ubuntu bash
 ```
 
-Para a execução do container pelo seu id
+Dá um nome ao container, para usá-lo nos comandos no lugar do id
+
+```bash
+docker run --name <container-name> <image-name>
+```
+
+Remove o container automaticamente quando ele encerrar
+
+```bash
+docker run --rm -it ubuntu bash
+```
+
+Para a execução do container pelo seu id (ou nome)
 
 ```bash
 docker stop <container-id>
@@ -47,6 +69,26 @@ Executa e interage com o processo de um container iniciado
 docker exec -it <container-id> bash
 ```
 
+Mostra os logs de um container, acompanhando em tempo real com `-f`
+
+```bash
+docker logs -f <container-id>
+```
+
+Mostra todos os detalhes de um container ou imagem em JSON (portas, volumes, rede, variáveis)
+
+```bash
+docker inspect <container-id>
+```
+
+Remove um container parado
+
+```bash
+docker rm <container-id>
+```
+
+## Imagens
+
 Gera uma imagem a partir de um Dockerfile
 
 ```bash
@@ -57,122 +99,99 @@ eg:
 docker build -t first-app:1.0 .
 ```
 
+Lista as imagens presentes na máquina
+
+```bash
+docker images
+```
+
+Mostra as camadas de uma imagem e o tamanho de cada uma
+
+```bash
+docker image history <image-name>:<tag-version>
+```
+
+Remove uma imagem
+
+```bash
+docker rmi <image-name>:<tag-version>
+```
+
+Gera a imagem para outra arquitetura. Necessário quando a imagem é construída num Mac com Apple
+Silicon (ARM) e vai rodar num servidor AMD64 — sem isso o container falha com `exec format error`
+
+```bash
+docker build --platform linux/amd64 -t <image-name>:<tag-version> .
+```
+
+## Registry (Docker Hub)
+
+Autentica no Docker Hub
+
+```bash
+docker login
+```
+
+Para enviar ao registry, a imagem precisa ter o seu username no nome. Gere a imagem já com ele
+
+```bash
+docker build -t <user-name>/<image-name>:<tag-version> .
+```
+
+Ou crie uma nova tag apontando para uma imagem que já existe
+
+```bash
+docker tag <image-name>:<tag-version> <user-name>/<image-name>:<tag-version>
+```
+
 Envia ao registry
 
 ```bash
 docker push <user-name>/<image-name>:<tag-version>
 ```
-p.s:
-Gere uma imagem com o seu username local
+
+Baixa uma imagem do registry sem rodá-la
+
 ```bash
-docker build -t <user-name>/<image-name>:<tag-version>
+docker pull <user-name>/<image-name>:<tag-version>
 ```
 
-Quando tivermos um erro de kernel nas imagens
+## Volumes e redes
+
+Lista os volumes
 
 ```bash
-docker build --platform linux/amd64 -t <image-name>:<tag-version> .
-```
-## Docker Compose
-
-Sobe todos os serviços definidos no `docker-compose.yml`, com os logs na tela
-
-```bash
-docker compose up
+docker volume ls
 ```
 
-Sobe os serviços em background (modo detached)
+Remove um volume
 
 ```bash
-docker compose up -d
+docker volume rm <volume-name>
 ```
 
-Reconstrói as imagens antes de subir (usar após alterar um Dockerfile)
+Lista as redes
 
 ```bash
-docker compose up --build
+docker network ls
 ```
 
-Apenas constrói as imagens, sem subir os serviços
+## Limpeza
+
+Mostra quanto espaço imagens, containers, volumes e cache de build ocupam
 
 ```bash
-docker compose build
+docker system df
 ```
 
-Constrói ignorando o cache das camadas
+Remove containers parados, redes sem uso, imagens sem tag e cache de build
 
 ```bash
-docker compose build --no-cache
+docker system prune
 ```
 
-Lista os serviços do projeto e seus status
+Inclui também imagens sem container e volumes sem uso (cuidado: apaga dados de volumes)
 
 ```bash
-docker compose ps
-```
-
-Mostra os logs de todos os serviços
-
-```bash
-docker compose logs
-```
-
-Acompanha os logs de um serviço específico em tempo real
-
-```bash
-docker compose logs -f <service-name>
-```
-
-Executa um comando dentro de um serviço que já está rodando
-
-```bash
-docker compose exec <service-name> bash
-```
-
-Roda um comando pontual num container novo, removido ao terminar
-
-```bash
-docker compose run --rm <service-name> mvn test
-```
-
-Para os serviços sem remover os containers
-
-```bash
-docker compose stop
-```
-
-Inicia novamente os serviços parados
-
-```bash
-docker compose start
-```
-
-Reinicia um serviço
-
-```bash
-docker compose restart <service-name>
-```
-
-Para e remove containers e rede do projeto (mantém os volumes)
-
-```bash
-docker compose down
-```
-
-Para e remove também os volumes nomeados
-
-```bash
-docker compose down -v
-```
-
-Usa um arquivo de compose com outro nome ou caminho
-
-```bash
-docker compose -f <file-name>.yml up
-```
-
-Mostra o arquivo final já com as variáveis resolvidas (útil para conferir erros)
-
-```bash
-docker compose config
+docker system prune -a --volumes
 ```

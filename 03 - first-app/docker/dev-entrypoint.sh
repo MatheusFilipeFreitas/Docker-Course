@@ -11,10 +11,9 @@ mvn -q compile
 touch "$STAMP"
 
 echo "[dev] starting spring-boot:run..."
+# Profile and DevTools polling come from the environment set in docker-compose.yml.
 mvn spring-boot:run \
-  -Dspring-boot.run.fork=true \
-  -Dspring-boot.run.profiles=dev \
-  -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Dspring.devtools.restart.poll-interval=2s -Dspring.devtools.restart.quiet-period=1s" &
+  -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" &
 APP_PID=$!
 
 # Stop the whole container cleanly on Ctrl+C / docker compose down.

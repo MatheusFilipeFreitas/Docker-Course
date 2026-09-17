@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: compose-app
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - app.yaml
+  - ingress.yaml
+
+images:
+  - name: compose-app
+    newName: ghcr.io/your-user/compose-app
+    newTag: 1.0.0

@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: first-app-dev
     ports:
       - "${APP_PORT:-8080}:8080"   # application (override: APP_PORT=8081 docker compose up)
       - "35729:35729" # devtools livereload
@@ -22,7 +21,6 @@ services:
       # macOS/Windows bind mounts do not always emit inotify events; polling is reliable.
       SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: 2s
       SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: 1s
-      MAVEN_OPTS: -Dmaven.repo.local=/root/.m2/repository
     stdin_open: true
     tty: true
 

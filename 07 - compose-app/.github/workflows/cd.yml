@@ -1,0 +1,117 @@
+# Continuous delivery: every commit on main becomes an image tagged with the commit hash
+# on the GitHub Container Registry, and is deployed to the target set in the DEPLOY_TARGET variable.
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; a newer commit waits for the running deploy to finish.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.image.outputs.name }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # GHCR only accepts lowercase names, and the repository owner may contain uppercase letters.
+      - name: Image name
+        id: image
+        run: echo "name=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/compose-app" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-docker:
+    if: vars.DEPLOY_TARGET == 'docker'
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SERVER: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+      APP_DIR: ${{ vars.APP_DIR }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Copy compose file and deploy script
+        run: |
+          scp deploy/docker-compose.prod.yml "$SERVER:$APP_DIR/docker-compose.yml"
+          scp deploy/deploy.sh "$SERVER:$APP_DIR/deploy.sh"
+
+      - name: Deploy
+        run: |
+          # The variables are expanded on the runner on purpose.
+          # shellcheck disable=SC2029
+          ssh "$SERVER" bash "$APP_DIR/deploy.sh" "$GITHUB_SHA"
+
+  deploy-kubernetes:
+    if: vars.DEPLOY_TARGET == 'kubernetes'
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      IMAGE: ${{ needs.build.outputs.image }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: azure/setup-kubectl@v4
+
+      - name: Configure kubeconfig
+        env:
+          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
+        run: |
+          mkdir -p ~/.kube
+          printf '%s\n' "$KUBECONFIG_DATA" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Point the manifests to the new image
+        run: |
+          sed -i "s|newName: .*|newName: $IMAGE|; s|newTag: .*|newTag: \"$GITHUB_SHA\"|" deploy/k8s/kustomization.yaml
+          kubectl kustomize deploy/k8s | grep "image: $IMAGE"
+
+      - name: Apply
+        run: kubectl apply -k deploy/k8s
+
+      - name: Wait for rollout (roll back on failure)
+        run: |
+          if ! kubectl -n compose-app rollout status deployment/app --timeout=300s; then
+            kubectl -n compose-app rollout undo deployment/app
+            exit 1
+          fi
