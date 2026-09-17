@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "docker: dev up",
+      "type": "shell",
+      "command": "docker compose up --build",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: dev down",
+      "type": "shell",
+      "command": "docker compose down",
+      "problemMatcher": []
+    },
+    {
+      "label": "docker: dev logs",
+      "type": "shell",
+      "command": "docker compose logs -f app",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

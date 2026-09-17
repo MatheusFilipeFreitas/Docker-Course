@@ -4,5 +4,3 @@
 services:
   app:
     command: sleep infinity
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
